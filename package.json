@@ -17,11 +17,11 @@
   "license": "ISC",
   "dependencies": {
     "@rochismo/ping": "^0.2.4",
-    "axios": "^0.19.2",
     "ip-cidr": "^2.0.8",
     "is-ip": "^3.1.0",
     "node-arp": "^1.0.6",
     "ping": "^0.2.2",
-    "systeminformation": "^4.23.1"
+    "systeminformation": "^4.23.1",
+    "xml-js": "^1.6.11"
   }
 }
