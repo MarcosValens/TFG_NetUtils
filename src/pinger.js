@@ -1,5 +1,6 @@
 const ping = require("@rochismo/ping");
 const ip_cidr = require("ip-cidr");
+const arp = require("node-arp");
 const utils = require("./utils");
 const Host = require("./models/host.js");
 class Pinger {
@@ -37,30 +38,31 @@ class Pinger {
         if (!this.hosts.length) {
             return console.error("There are no hosts available");
         }
-        this.aliveHosts = this.hosts.map(host => {
+        this.aliveHosts = this.hosts.map((host) => {
             return this.ping(host);
         });
-        
     }
 
     async fulfillPromisesAndFilterHosts() {
         const pingedHosts = await utils.getProgress(
             this.aliveHosts,
-            progress => {
+            (progress) => {
                 if (this._sse) {
                     this._sse.send(progress.toFixed(2));
                 }
             }
         );
         return pingedHosts
-            .filter(host => host.alive)
-            .map(data => {
+            .filter((host) => host.alive)
+            .map((data) => {
                 return new Host(data);
             });
     }
 
-    ping(ip) {
-        return ping.promise.probe(ip);
+    async ping(ip) {
+        const data = await ping.promise.probe(ip);
+        data.mac = await this.getMac(ip);
+        return data;
     }
 
     /**
@@ -69,6 +71,26 @@ class Pinger {
      */
     set sse(sse) {
         this._sse = sse;
+    }
+
+    _getPlatform() {
+        return process.platform === "win32"
+            ? "readMACWindows"
+            : process.platform === "linux"
+            ? "readMACLinux"
+            : "readMACMac";
+    }
+
+    getMac(host) {
+        const platforSpecific = this._getPlatform();
+        return new Promise((resolve) => {
+            arp[platforSpecific](host, (error, mac) => {
+                if (error) {
+                    return resolve(error);
+                }
+                resolve(mac);
+            });
+        });
     }
 }
 

@@ -7,6 +7,8 @@ module.exports = class Host {
      */
     constructor(data) {
         this.address = data.host;
+        this.mac = data.mac;
+        this.description = data.description;
         this.time = {
             total: data.time,
             min: data.min,

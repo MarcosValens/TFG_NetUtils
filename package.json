@@ -19,6 +19,7 @@
     "@rochismo/ping": "^0.2.4",
     "ip-cidr": "^2.0.8",
     "is-ip": "^3.1.0",
+    "node-arp": "^1.0.6",
     "ping": "^0.2.2",
     "systeminformation": "^4.23.1"
   }
