@@ -3,17 +3,14 @@ const ip_cidr = require("ip-cidr");
 const arp = require("node-arp");
 const utils = require("./utils");
 const Host = require("./models/host.js");
+const parser = require("./macParser");
+
 class Pinger {
-    constructor(fetcher) {
+    constructor() {
         this.hosts = [];
         this._sse = null;
         this.aliveHosts = [];
         utils.getProgress.bind(this);
-        this.fetcher = fetcher;
-    }
-
-    setToken(token) {
-        this.fetcher.setToken(token);
     }
 
     /**
@@ -98,7 +95,7 @@ class Pinger {
                 });
             })
         );
-        const data = await this.fetcher.getData(mac);
+        const data = parser.getData(mac);
         data.physicalAddress = mac;
         return data;
     }
