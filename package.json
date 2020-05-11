@@ -1,6 +1,6 @@
 {
   "name": "@rochismo/net-utils",
-  "version": "1.0.14",
+  "version": "1.1.0",
   "description": "A simple network utility package",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@rochismo/ping": "^0.2.4",
+    "axios": "^0.19.2",
     "ip-cidr": "^2.0.8",
     "is-ip": "^3.1.0",
     "node-arp": "^1.0.6",

@@ -4,11 +4,16 @@ const arp = require("node-arp");
 const utils = require("./utils");
 const Host = require("./models/host.js");
 class Pinger {
-    constructor() {
+    constructor(fetcher) {
         this.hosts = [];
         this._sse = null;
         this.aliveHosts = [];
         utils.getProgress.bind(this);
+        this.fetcher = fetcher;
+    }
+
+    setToken(token) {
+        this.fetcher.setToken(token);
     }
 
     /**
@@ -81,16 +86,21 @@ class Pinger {
             : "readMACMac";
     }
 
-    getMac(host) {
+    async getMac(host) {
         const platforSpecific = this._getPlatform();
-        return new Promise((resolve) => {
-            arp[platforSpecific](host, (error, mac) => {
-                if (error) {
-                    return resolve(error);
-                }
-                resolve(mac);
-            });
-        });
+        const mac = await Promise.resolve(
+            new Promise((resolve) => {
+                arp[platforSpecific](host, (error, mac) => {
+                    if (error) {
+                        return resolve(error);
+                    }
+                    resolve(mac);
+                });
+            })
+        );
+        const data = await this.fetcher.getData(mac);
+        data.physicalAddress = mac;
+        return data;
     }
 }
 
