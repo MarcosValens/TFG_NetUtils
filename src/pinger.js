@@ -95,8 +95,9 @@ class Pinger {
                 });
             })
         );
-        const data = parser.getData(mac);
+        const data = await parser.getData(mac);
         data.physicalAddress = mac;
+
         return data;
     }
 }
