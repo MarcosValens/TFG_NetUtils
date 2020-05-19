@@ -79,12 +79,15 @@ class Pinger {
         return process.platform === "win32"
             ? "readMACWindows"
             : process.platform === "linux"
-            ? "readMACLinux"
+            ? null
             : "readMACMac";
     }
 
     async getMac(host) {
         const platforSpecific = this._getPlatform();
+        if (!platforSpecific){
+            return this.getDefault()
+        }
         const mac = await Promise.resolve(
             new Promise((resolve) => {
                 arp[platforSpecific](host, (error, mac) => {
@@ -99,6 +102,13 @@ class Pinger {
         data.physicalAddress = mac;
 
         return data;
+    }
+
+    getDefault(){
+        return {
+            companyName:"",
+            physicalAddress:""
+        }
     }
 }
 
