@@ -21,7 +21,7 @@
     "is-ip": "^3.1.0",
     "node-arp": "^1.0.6",
     "ping": "^0.2.2",
-    "systeminformation": "^4.23.1",
+    "systeminformation": "^5.3.1",
     "xml-js": "^1.6.11"
   }
 }
